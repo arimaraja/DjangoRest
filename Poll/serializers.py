@@ -5,7 +5,7 @@ from rest_framework import serializers
 class VoterSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Voter
-        fields = ('name','email')
+        fields = ('id','name','email')
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
