@@ -14,9 +14,15 @@ from . serializers import VoterSerializer, ArticleSerializer, PolledInfoSerializ
 class VoterList(APIView):
     def get(self, request, format=None):
         print("VoterList");
-        query = "SELECT id, name, email FROM  poll_voter";
-        voters = Voter.objects.raw(query)
-        serializer=VoterSerializer(voters,many=True)
+        nameFilter = request.GET.get('name')
+        ##query = "SELECT id, name, email FROM  poll_voter"
+        if ( nameFilter != None ):
+            print ("Applying " + nameFilter)
+            voters = Voter.objects.filter(name__contains=nameFilter)
+            #voters = mlike.raw(query)
+        else:
+            voters = Voter.objects.all()
+        serializer = VoterSerializer(voters,many=True)
         return Response(serializer.data)
 
     def post(self,request, format=None):
@@ -51,6 +57,7 @@ class VoterListDetails(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
+        print ("VoterDetailList")
         snippet = self.get_object(pk)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -64,6 +71,16 @@ class VoterListDetails(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 """
+
+class VoterSearch(APIView):
+    def get(self, request, name, format=None):
+        print("VoterSearch");
+        print( "Parameter " + name );
+
+        query = "SELECT id, name, email FROM  poll_voter where name like 'su%' ";
+        voters = Voter.objects.raw(query)
+        serializer=VoterSerializer(voters,many=True)
+        return Response(serializer.data)
 
 class ArticleList(APIView):
     def get(self, request):

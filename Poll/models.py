@@ -10,6 +10,7 @@ class Article(models.Model):
 		return self.title
 
 class Voter(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=15)
     email = models.EmailField()
     def __str__(self):
